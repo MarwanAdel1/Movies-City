@@ -1,14 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
+    android:paddingVertical="10dp"
     tools:context=".modules.movies_fragment.presentation.view.MoviesListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ImageButton
+        android:id="@+id/navigation_menu_image_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/icon_navigation_menu_movies_list_fragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/app_name_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toStartOf="@id/search_image_button"
+        app:layout_constraintStart_toEndOf="@id/navigation_menu_image_button"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/search_image_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/icon_search_movies_list_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/search_edittext"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="@color/black"
+        android:drawableStart="@drawable/icon_search_movies_list_fragment"
+        android:hint="Search your movie"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/navigation_menu_image_button"
+        app:layout_constraintEnd_toEndOf="@id/search_image_button"
+        app:layout_constraintStart_toStartOf="@id/navigation_menu_image_button"
+        app:layout_constraintTop_toTopOf="@id/navigation_menu_image_button" />
+
+
+    <TextView
+        android:id="@+id/coming_soon_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Coming Soon"
+        android:textAlignment="viewStart"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/search_edittext"
+        app:layout_constraintStart_toStartOf="@+id/navigation_menu_image_button"
+        app:layout_constraintTop_toBottomOf="@id/navigation_menu_image_button" />
+
+
+    <FrameLayout
+        android:id="@+id/coming_soon_layout"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/coming_soon_textview">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/coming_soon_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="6dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/movies_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Movies"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="@id/coming_soon_textview"
+        app:layout_constraintTop_toBottomOf="@id/coming_soon_layout" />
+
+    <TextView
+        android:id="@+id/movies_filter_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@id/movies_textview"
+        app:layout_constraintTop_toBottomOf="@id/movies_textview"
+        tools:text="Popular Movies" />
+
+
+    <ImageButton
+        android:id="@+id/filter_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/icon_movies_filter_movies_list_fragment"
+        app:layout_constraintBottom_toBottomOf="@id/movies_filter_textview"
+        app:layout_constraintEnd_toEndOf="@id/search_image_button"
+        app:layout_constraintTop_toTopOf="@id/movies_filter_textview" />
+
+    <FrameLayout
+        android:id="@+id/movies_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/search_image_button"
+        app:layout_constraintStart_toStartOf="@id/navigation_menu_image_button"
+        app:layout_constraintTop_toBottomOf="@id/movies_filter_textview">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/movies_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:clipToPadding="false"
+            android:paddingVertical="16dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,9 +8,12 @@ import com.squareup.moshi.Moshi
 import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
+
 
 @Module
 class AppModule {
@@ -28,11 +31,27 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(moshi: Moshi, constants: Constants): Retrofit =
+    fun provideRetrofit(moshi: Moshi, okHttpClient: OkHttpClient, constants: Constants): Retrofit =
         Retrofit.Builder().baseUrl(constants.API_BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .client(okHttpClient)
             .build()
+
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient {
+        val logging = HttpLoggingInterceptor()
+
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        val httpClient = OkHttpClient.Builder()
+
+        httpClient.addInterceptor(logging) // <-- this is the important line!
+
+        return httpClient.build()
+    }
 
     @Singleton
     @Provides
