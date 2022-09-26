@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <item
+        android:id="@+id/discover_filter"
+        android:title="Discover" />
+    <item
+        android:id="@+id/popular_filter"
+        android:title="Popular" />
+    <item
+        android:id="@+id/top_rated_filter"
+        android:title="Top rated" />
+</menu>

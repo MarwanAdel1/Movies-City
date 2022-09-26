@@ -23,7 +23,7 @@
     <FrameLayout
         android:id="@+id/coming_soon_layout"
         android:layout_width="0dp"
-        android:layout_height="220dp"
+        android:layout_height="wrap_content"
         android:layout_marginVertical="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
