@@ -2,7 +2,7 @@ package com.example.moviescity.modules.movies_list.data.model
 
 import com.squareup.moshi.Json
 
-data class Results(
+data class ApiMoviesResult(
     @Json(name = "adult")
     val adult: Boolean,
     @Json(name = "backdrop_path")

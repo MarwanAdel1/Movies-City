@@ -6,7 +6,7 @@ data class ApiMovieModel(
     @Json(name = "page")
     val page: Int,
     @Json(name = "results")
-    val results: List<Results>,
+    val results: List<ApiMoviesResult>,
     @Json(name = "total_pages")
     val totalPages: Int,
     @Json(name = "total_results")

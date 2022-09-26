@@ -1,4 +1,4 @@
-package com.example.moviescity.modules.movies_list.data.movies_api
+package com.example.moviescity.modules.movies_list.data.services
 
 import com.example.moviescity.modules.movies_list.data.model.ApiMovieModel
 import retrofit2.http.GET
@@ -9,7 +9,6 @@ interface MoviesListService {
     suspend fun getAllMoviesByPreferences(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
-        @Query("sort_by") sortBy: String,
         @Query("include_adult") includeAdult: Boolean,
         @Query("include_video") includeVideo: Boolean,
         @Query("page") page: Int
