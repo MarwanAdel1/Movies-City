@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:text="Coming Soon"
+        android:text="@string/coming_soon"
         android:textAlignment="viewStart"
         android:textColor="@color/white"
         android:textSize="30sp"
@@ -40,7 +40,6 @@
             android:paddingHorizontal="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_movie_coming_soon" />
-
 
     </FrameLayout>
 

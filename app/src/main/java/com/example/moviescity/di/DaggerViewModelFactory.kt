@@ -1,4 +1,4 @@
-package com.example.moviescity.utils
+package com.example.moviescity.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

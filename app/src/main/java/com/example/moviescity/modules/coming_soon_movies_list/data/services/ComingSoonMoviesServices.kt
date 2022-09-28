@@ -1,6 +1,7 @@
 package com.example.moviescity.modules.coming_soon_movies_list.data.services
 
 import com.example.moviescity.modules.coming_soon_movies_list.data.model.ApiUpComingSoonMovieModel
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -10,5 +11,5 @@ interface ComingSoonMoviesServices {
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") page: Int
-    ): ApiUpComingSoonMovieModel
+    ): Response<ApiUpComingSoonMovieModel>
 }

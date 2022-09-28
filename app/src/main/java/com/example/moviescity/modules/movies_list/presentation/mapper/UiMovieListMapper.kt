@@ -5,10 +5,10 @@ import com.example.moviescity.modules.movies_list.presentation.model.ViewMovieMo
 import com.example.moviescity.modules.movies_list.presentation.model.ViewMoviesResult
 
 object UiMovieListMapper {
-    fun toUiMovieModel(domainMovieModel: DomainMovieModel, paginated: Boolean): ViewMovieModel {
+    fun toUiMovieModel(domainMovieModel: DomainMovieModel?, paginated: Boolean): ViewMovieModel {
         val uiMoviesList = mutableListOf<ViewMoviesResult>()
 
-        domainMovieModel.results.forEach {
+        domainMovieModel?.results?.forEach {
             val movie = ViewMoviesResult(
                 id = it.id,
                 title = it.title,

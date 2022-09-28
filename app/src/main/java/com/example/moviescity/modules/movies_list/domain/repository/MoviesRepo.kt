@@ -1,6 +1,5 @@
 package com.example.moviescity.modules.movies_list.domain.repository
 
-import com.example.moviescity.modules.coming_soon_movies_list.domain.model.DomainUpComingSoonMovieModel
 import com.example.moviescity.modules.movies_list.domain.model.DomainMovieModel
 
 interface MoviesRepo {
@@ -10,17 +9,17 @@ interface MoviesRepo {
         includeAdult: Boolean,
         includeVideo: Boolean,
         page: Int
-    ): DomainMovieModel
+    ): DomainMovieModel?
 
     suspend fun getPopularMovies(
         apiKey: String,
         language: String,
         page: Int
-    ): DomainMovieModel
+    ): DomainMovieModel?
 
     suspend fun getTopRatedMovies(
         apiKey: String,
         language: String,
         page: Int
-    ): DomainMovieModel
+    ): DomainMovieModel?
 }

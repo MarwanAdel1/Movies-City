@@ -12,13 +12,11 @@ import retrofit2.Retrofit
 @Module
 abstract class MoviesFragmentModule {
     companion object {
-        @MoviesFragmentScope
         @Provides
         fun provideMoviesAPI(retrofit: Retrofit): MoviesListService {
             return retrofit.create(MoviesListService::class.java)
         }
 
-        @MoviesFragmentScope
         @Provides
         fun provideUpcomingMoviesAPI(retrofit: Retrofit): ComingSoonMoviesServices {
             return retrofit.create(ComingSoonMoviesServices::class.java)

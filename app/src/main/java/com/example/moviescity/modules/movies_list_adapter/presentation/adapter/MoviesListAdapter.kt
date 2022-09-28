@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescity.R
-import com.example.moviescity.databinding.ItemMoviesBinding
+import com.example.moviescity.databinding.ViewMoviesFragmentMoviesListBinding
 import com.example.moviescity.modules.movies_list_adapter.presentation.model.AdapterMovieModel
 import com.example.moviescity.modules.movies_list_adapter.presentation.view.MovieClickListener
 import com.example.moviescity.utils.Constants
@@ -31,7 +31,7 @@ class MoviesListAdapter @Inject constructor(
         viewType: Int
     ): MoviesListViewHolder {
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
-        val view = ItemMoviesBinding.inflate(layoutInflater, parent, false)
+        val view = ViewMoviesFragmentMoviesListBinding.inflate(layoutInflater, parent, false)
 
         return MoviesListViewHolder(view)
     }
@@ -69,6 +69,6 @@ class MoviesListAdapter @Inject constructor(
         }
     }
 
-    inner class MoviesListViewHolder(val binding: ItemMoviesBinding) :
+    inner class MoviesListViewHolder(val binding: ViewMoviesFragmentMoviesListBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

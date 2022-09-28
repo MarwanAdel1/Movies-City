@@ -7,5 +7,5 @@ interface UpcomingMoviesRepo {
         apiKey: String,
         language: String,
         page: Int
-    ): DomainUpComingSoonMovieModel
+    ): DomainUpComingSoonMovieModel?
 }

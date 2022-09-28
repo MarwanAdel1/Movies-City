@@ -5,8 +5,10 @@ import com.example.moviescity.R
 import dagger.android.support.DaggerAppCompatActivity
 
 class MoviesActivity : DaggerAppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
     }
 }

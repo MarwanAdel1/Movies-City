@@ -1,5 +1,6 @@
 package com.example.moviescity.modules.movies_list.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,8 @@ import com.example.moviescity.modules.movies_list.presentation.mapper.UiMovieLis
 import com.example.moviescity.modules.movies_list.presentation.model.EnumMoviesType
 import com.example.moviescity.modules.movies_list.presentation.model.ViewMovieModel
 import com.example.moviescity.utils.Constants
+import com.example.moviescity.utils.NetworkConnectivity
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,12 +21,25 @@ class MoviesListViewModel @Inject constructor(
     private val getDiscoverMovies: GetDiscoverMovies,
     private val getPopularMovies: GetPopularMovies,
     private val getTopRatedMovies: GetTopRatedMovies,
-    private val constants: Constants
+    private val constants: Constants,
+    private val network: NetworkConnectivity
 ) : ViewModel() {
+    private val TAG = "MoviesListViewModel"
+
     private val _page = MutableLiveData<Int>()
 
-    private val _movies = MutableLiveData<ViewMovieModel>()
-    val movies: LiveData<ViewMovieModel> = _movies
+    private val _movies = MutableLiveData<ViewMovieModel?>()
+    val movies: LiveData<ViewMovieModel?>
+        get() = _movies
+
+    private val _isConnected = MutableLiveData<Boolean>()
+    val isConnected: LiveData<Boolean>
+        get() = _isConnected
+
+    private val coroutineHandlerException =
+        CoroutineExceptionHandler { _, throwable ->
+            Log.e(TAG, "Error: ${throwable.message} ")
+        }
 
     init {
         _page.value = 0
@@ -35,7 +51,7 @@ class MoviesListViewModel @Inject constructor(
         } else {
             1
         }
-        _page.postValue(page)
+
         when (type) {
             EnumMoviesType.DISCOVER_MOVIES -> getDiscoverMovies(page, paginated)
             EnumMoviesType.POPULAR_MOVIES -> getPopularMovies(page, paginated)
@@ -44,49 +60,77 @@ class MoviesListViewModel @Inject constructor(
     }
 
     fun getDiscoverMovies(page: Int, paginated: Boolean) {
-        viewModelScope.launch {
-            val movies = UiMovieListMapper.toUiMovieModel(
-                paginated = paginated,
-                domainMovieModel = getDiscoverMovies.execute(
-                    apiKey = constants.API_KEY,
-                    language = "en-US",
-                    includeVideo = false,
-                    includeAdult = false,
-                    page = page
-                )
+        viewModelScope.launch(coroutineHandlerException) {
+            val status = network.checkConnectivity()
+            _isConnected.postValue(status)
+
+            val response = getDiscoverMovies.execute(
+                apiKey = constants.API_KEY,
+                language = "en-US",
+                includeVideo = false,
+                includeAdult = false,
+                page = page
             )
 
-            _movies.postValue(movies)
+            if (response != null) {
+                val movies = UiMovieListMapper.toUiMovieModel(
+                    paginated = paginated,
+                    domainMovieModel = response
+                )
+                _movies.postValue(movies)
+                _page.postValue(page)
+            } else {
+                _movies.postValue(null)
+            }
+
         }
     }
 
     fun getPopularMovies(page: Int, paginated: Boolean) {
-        viewModelScope.launch {
-            val movies = UiMovieListMapper.toUiMovieModel(
-                paginated = paginated,
-                domainMovieModel = getPopularMovies.execute(
-                    apiKey = constants.API_KEY,
-                    language = "en-US",
-                    page = page
-                )
+        viewModelScope.launch(coroutineHandlerException) {
+            val status = network.checkConnectivity()
+            _isConnected.postValue(status)
+
+            val response = getPopularMovies.execute(
+                apiKey = constants.API_KEY,
+                language = "en-US",
+                page = page
             )
 
-            _movies.postValue(movies)
+            if (response != null) {
+                val movies = UiMovieListMapper.toUiMovieModel(
+                    paginated = paginated,
+                    domainMovieModel = response
+                )
+                _movies.postValue(movies)
+                _page.postValue(page)
+            } else {
+                _movies.postValue(null)
+            }
         }
     }
 
     fun getTopRatedMovies(page: Int, paginated: Boolean) {
-        viewModelScope.launch {
-            val movies = UiMovieListMapper.toUiMovieModel(
-                paginated = paginated,
-                domainMovieModel = getTopRatedMovies.execute(
-                    apiKey = constants.API_KEY,
-                    language = "en-US",
-                    page = page
-                )
+        viewModelScope.launch(coroutineHandlerException) {
+            val status = network.checkConnectivity()
+            _isConnected.postValue(status)
+            val response = getTopRatedMovies.execute(
+                apiKey = constants.API_KEY,
+                language = "en-US",
+                page = page
             )
 
-            _movies.postValue(movies)
+            if (response != null) {
+                val movies = UiMovieListMapper.toUiMovieModel(
+                    paginated = paginated,
+                    domainMovieModel = response
+                )
+
+                _movies.postValue(movies)
+                _page.postValue(page)
+            } else {
+                _movies.postValue(null)
+            }
         }
     }
 }

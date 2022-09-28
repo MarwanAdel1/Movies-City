@@ -12,13 +12,21 @@ class UpcomingMoviesRepoImp @Inject constructor(private val remoteSource: Remote
         apiKey: String,
         language: String,
         page: Int
-    ): DomainUpComingSoonMovieModel {
-        return ApiUpcomingMoviesMapper.toDomainUpcomingMovieModel(
-            remoteSource.getComingSoonMovies(
-                apiKey = apiKey,
-                language = language,
-                page = page
-            )
+    ): DomainUpComingSoonMovieModel? {
+        val upcomingMoviesRequest = remoteSource.getComingSoonMovies(
+            apiKey = apiKey,
+            language = language,
+            page = page
         )
+
+        if (upcomingMoviesRequest.isFailed) {
+            return null
+        }
+
+        if (!upcomingMoviesRequest.isSuccessful) {
+            return null
+        }
+
+        return ApiUpcomingMoviesMapper.toDomainUpcomingMovieModel(upcomingMoviesRequest.body)
     }
 }

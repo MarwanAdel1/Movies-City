@@ -3,4 +3,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="upcoming_image_description">upcoming image description</string>
+    <string name="navigation_menu_image_button_description">Navigation menu image Button</string>
+    <string name="search_icon_image_description">Search icon</string>
+    <string name="search_your_movie_hint_edittext">Search your movie</string>
+    <string name="movie_image_description">Movie Image</string>
+    <string name="movie_adult_indication_image_description">Movie adult indication image</string>
+    <string name="movies">Movies</string>
+    <string name="filter_icon_image">Filter Icon</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="no_movies_placeholder_image_description">No movies placeholder image</string>
+    <string name="retry">Retry</string>
+    <string name="no_internet_connection">No Internet Connection</string>
 </resources>

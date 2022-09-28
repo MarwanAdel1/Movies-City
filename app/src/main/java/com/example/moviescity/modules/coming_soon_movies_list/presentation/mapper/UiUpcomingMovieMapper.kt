@@ -5,10 +5,10 @@ import com.example.moviescity.modules.coming_soon_movies_list.presentation.model
 import com.example.moviescity.modules.coming_soon_movies_list.presentation.model.UiUpcomingMovieModel
 
 object UiUpcomingMovieMapper {
-    fun toUiUpcomingMovieModel(domainUpComingSoonMovieModel: DomainUpComingSoonMovieModel): UiUpcomingMovieModel {
+    fun toUiUpcomingMovieModel(domainUpComingSoonMovieModel: DomainUpComingSoonMovieModel?): UiUpcomingMovieModel {
         val results = mutableListOf<UiUpComingMoviesResult>()
 
-        domainUpComingSoonMovieModel.results.forEach {
+        domainUpComingSoonMovieModel?.results?.forEach {
             val result = UiUpComingMoviesResult(
                 posterPath = it.posterPath,
                 voteAverage = it.voteAverage,
@@ -22,8 +22,8 @@ object UiUpcomingMovieMapper {
         }
 
         return UiUpcomingMovieModel(
-            page = domainUpComingSoonMovieModel.page,
-            totalPages = domainUpComingSoonMovieModel.totalPages,
+            page = domainUpComingSoonMovieModel?.page ?: 0,
+            totalPages = domainUpComingSoonMovieModel?.totalPages ?: 0,
             results = results
         )
     }

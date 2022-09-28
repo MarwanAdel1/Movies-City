@@ -1,9 +1,10 @@
 package com.example.moviescity.modules.movies_fragment.presentation.view
 
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescity.R
 import com.example.moviescity.databinding.FragmentMoviesListBinding
+import com.example.moviescity.di.DaggerViewModelFactory
 import com.example.moviescity.modules.coming_soon_movies_adapter.presentation.model.AdapterComingSoonMovieModel
 import com.example.moviescity.modules.coming_soon_movies_list.presentation.model.UiUpcomingMovieModel
 import com.example.moviescity.modules.coming_soon_movies_list.presentation.viewmodel.UpcomingMoviesViewModel
@@ -27,7 +29,6 @@ import com.example.moviescity.modules.movies_list.presentation.model.ViewMovieMo
 import com.example.moviescity.modules.movies_list.presentation.viewmodel.MoviesListViewModel
 import com.example.moviescity.modules.movies_list_adapter.presentation.model.AdapterMovieModel
 import com.example.moviescity.modules.movies_list_adapter.presentation.view.MovieClickListener
-import com.example.moviescity.utils.DaggerViewModelFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -65,11 +66,20 @@ class MoviesListFragment : DaggerFragment(), MovieClickListener, MovieTypeClickL
         initViews()
         initViewModels()
         setupListeners()
-        getData(EnumMoviesType.DISCOVER_MOVIES, false)
+        getData()
         initObservers()
     }
 
+    override fun movieGetClicked() {
+
+    }
+
+    override fun onFilterSelected(view: View) {
+        showPopup(view)
+    }
+
     private fun initViews() {
+        binding.viewsRecyclerview.visibility = View.INVISIBLE
         binding.viewsRecyclerview.adapter = viewsRecyclerAdapter
         viewsRecyclerAdapter.updateFilterText("Discover Movies")
     }
@@ -106,53 +116,87 @@ class MoviesListFragment : DaggerFragment(), MovieClickListener, MovieTypeClickL
                 super.onScrolled(recyclerView, dx, dy)
                 val gridLayoutManager = recyclerView.layoutManager as GridLayoutManager
 
-                Log.e(
-                    TAG,
-                    "onScrolled: ${gridLayoutManager.findLastCompletelyVisibleItemPosition()}"
-                )
-
-                if (gridLayoutManager.findLastCompletelyVisibleItemPosition() >= viewsSize-1) {
+                if (gridLayoutManager.findLastCompletelyVisibleItemPosition() >= viewsSize - 1 && viewsSize > 4) {
                     moviesListViewModel.getNextPage(filterValue, true)
                 }
             }
         })
+
+        binding.placeholderNoInternet.retryInternetButton.setOnClickListener {
+            binding.loadingProgressBar.visibility = View.VISIBLE
+            binding.placeholderNoInternet.root.visibility = View.GONE
+
+            getData()
+        }
     }
 
-    private fun getData(type: EnumMoviesType, paginated: Boolean) {
-        moviesListViewModel.getNextPage(type, paginated)
+    private fun getData() {
+        binding.loadingProgressBar.visibility = View.VISIBLE
         upComingSoonMoviesListViewModel.getUpcomingMovies()
+        moviesListViewModel.getNextPage(EnumMoviesType.DISCOVER_MOVIES, false)
     }
 
     private fun initObservers() {
         moviesListViewModel.movies.observe(viewLifecycleOwner) {
-            var movies = moviesToAdapterModel(it)
-            if (it.paginated) {
-                val newMovies =
-                    viewsRecyclerAdapter.getLatestUpdatedMovies().toMutableList()
-                newMovies.addAll(movies)
-                movies = newMovies
-                viewsSize += it.movies.size
+            binding.loadingProgressBar.visibility = View.GONE
+            if (it == null) {
+                binding.viewsRecyclerview.visibility = View.INVISIBLE
+                binding.placeholderNoMovies.root.visibility = View.GONE
+                binding.placeholderNoInternet.root.visibility = View.VISIBLE
             } else {
-                viewsSize = it.movies.size + 1
+                if (it.movies.isNotEmpty()) {
+                    binding.viewsRecyclerview.visibility = View.VISIBLE
+                    binding.placeholderNoMovies.root.visibility = View.GONE
+                    binding.placeholderNoInternet.root.visibility = View.GONE
+
+
+                    var movies = moviesToAdapterModel(it)
+                    if (it.paginated) {
+                        val newMovies =
+                            viewsRecyclerAdapter.getLatestUpdatedMovies().toMutableList()
+                        newMovies.addAll(movies)
+                        movies = newMovies
+                        viewsSize += it.movies.size
+                    } else {
+                        viewsSize = it.movies.size + 1
+                    }
+                    viewsRecyclerAdapter.updateMovies(movies)
+                } else {
+                    binding.viewsRecyclerview.visibility = View.INVISIBLE
+                    binding.placeholderNoMovies.root.visibility = View.VISIBLE
+                    binding.placeholderNoInternet.root.visibility = View.GONE
+                }
             }
-            Log.e(TAG, "initObservers: $viewsSize")
-            viewsRecyclerAdapter.updateMovies(movies)
         }
 
         upComingSoonMoviesListViewModel.upcomingMovies.observe(viewLifecycleOwner) {
-            if (it.results.isNotEmpty()) {
-                (binding.viewsRecyclerview.layoutManager as GridLayoutManager).spanSizeLookup =
-                    object : SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int {
-                            return if (position == 0 || position == 1) {
-                                2
-                            } else {
-                                1
+            if (it != null) {
+                if (it.results.isNotEmpty()) {
+                    (binding.viewsRecyclerview.layoutManager as GridLayoutManager).spanSizeLookup =
+                        object : SpanSizeLookup() {
+                            override fun getSpanSize(position: Int): Int {
+                                return if (position == 0 || position == 1) {
+                                    2
+                                } else {
+                                    1
+                                }
                             }
                         }
-                    }
-                viewsRecyclerAdapter.updateUpcomingMovies(upcomingMoviesToAdapterModel(it))
-                viewsSize += 1
+                    viewsRecyclerAdapter.updateUpcomingMovies(upcomingMoviesToAdapterModel(it))
+                    viewsSize += 1
+                }
+            }
+        }
+
+        moviesListViewModel.isConnected.observe(viewLifecycleOwner) {
+            if (!it) {
+                val alertDialog = AlertDialog.Builder(context)
+                alertDialog.apply {
+                    //setIcon(R.drawable.ic_hello)
+                    setTitle("Internet Connection")
+                    setMessage("No Internet Connection, Please try again later")
+                    setPositiveButton("Okay") { _: DialogInterface?, _: Int -> }
+                }.create().show()
             }
         }
     }
@@ -228,7 +272,7 @@ class MoviesListFragment : DaggerFragment(), MovieClickListener, MovieTypeClickL
     private fun showPopup(view: View) {
         val popup = PopupMenu(context, view)
         // Inflate the menu from xml
-        popup.menuInflater.inflate(R.menu.menu_filter_movies, popup.getMenu())
+        popup.menuInflater.inflate(R.menu.menu_filter_movies, popup.menu)
         // Setup menu item selection
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -256,13 +300,5 @@ class MoviesListFragment : DaggerFragment(), MovieClickListener, MovieTypeClickL
         // Handle dismissal with: popup.setOnDismissListener(...);
         // Show the menu
         popup.show()
-    }
-
-    override fun movieGetClicked() {
-
-    }
-
-    override fun onFilterSelected(view: View) {
-        showPopup(view)
     }
 }

@@ -15,8 +15,8 @@ class MoviesRepoImp @Inject constructor(private val remoteSource: RemoteMoviesLi
         includeAdult: Boolean,
         includeVideo: Boolean,
         page: Int
-    ): DomainMovieModel {
-        val discoverMovies = remoteSource.getDiscoverMovies(
+    ): DomainMovieModel? {
+        val discoverMoviesRequest = remoteSource.getDiscoverMovies(
             apiKey = apiKey,
             language = language,
             includeAdult = includeAdult,
@@ -24,34 +24,58 @@ class MoviesRepoImp @Inject constructor(private val remoteSource: RemoteMoviesLi
             page = page
         )
 
-        return MoviesMapper.toDomainMovieModel(discoverMovies)
+        if (discoverMoviesRequest.isFailed) { //out of control error
+            return null
+        }
+
+        if (!discoverMoviesRequest.isSuccessful) { //api error
+            return null
+        }
+
+        return MoviesMapper.toDomainMovieModel(discoverMoviesRequest.body)
     }
 
     override suspend fun getPopularMovies(
         apiKey: String,
         language: String,
         page: Int
-    ): DomainMovieModel {
-        val popularMovies = remoteSource.getPopularMovies(
+    ): DomainMovieModel? {
+        val popularMoviesRequest = remoteSource.getPopularMovies(
             apiKey = apiKey,
             language = language,
             page = page
         )
 
-        return MoviesMapper.toDomainMovieModel(popularMovies)
+        if (popularMoviesRequest.isFailed) {
+            return null
+        }
+
+        if (!popularMoviesRequest.isSuccessful) {
+            return null
+        }
+
+        return MoviesMapper.toDomainMovieModel(popularMoviesRequest.body)
     }
 
     override suspend fun getTopRatedMovies(
         apiKey: String,
         language: String,
         page: Int
-    ): DomainMovieModel {
-        val topRatedMovies = remoteSource.getTopRatedMovies(
+    ): DomainMovieModel? {
+        val topRatedMoviesRequest = remoteSource.getTopRatedMovies(
             apiKey = apiKey,
             language = language,
             page = page
         )
 
-        return MoviesMapper.toDomainMovieModel(topRatedMovies)
+        if (topRatedMoviesRequest.isFailed) {
+            return null
+        }
+
+        if (!topRatedMoviesRequest.isSuccessful) {
+            return null
+        }
+
+        return MoviesMapper.toDomainMovieModel(topRatedMoviesRequest.body)
     }
 }
