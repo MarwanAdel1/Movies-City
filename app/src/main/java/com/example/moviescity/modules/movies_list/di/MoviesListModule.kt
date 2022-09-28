@@ -6,7 +6,7 @@ import com.example.moviescity.modules.movies_list.data.data_source.RemoteMoviesL
 import com.example.moviescity.modules.movies_list.data.data_source.remote_sorce.RemoteMoviesListDataSourceImp
 import com.example.moviescity.modules.movies_list.data.repository.MoviesRepoImp
 import com.example.moviescity.modules.movies_list.domain.repository.MoviesRepo
-import com.example.moviescity.modules.movies_list_adapter.presentation.view.MovieClickListener
+import com.example.moviescity.modules.movies_list.presentation.view.MovieClickListener
 import dagger.Binds
 import dagger.Module
 

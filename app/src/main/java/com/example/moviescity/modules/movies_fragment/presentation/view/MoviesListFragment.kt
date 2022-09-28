@@ -20,15 +20,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescity.R
 import com.example.moviescity.databinding.FragmentMoviesListBinding
 import com.example.moviescity.di.DaggerViewModelFactory
-import com.example.moviescity.modules.coming_soon_movies_adapter.presentation.model.AdapterComingSoonMovieModel
+import com.example.moviescity.modules.coming_soon_movies_list.presentation.model.AdapterComingSoonMovieModel
 import com.example.moviescity.modules.coming_soon_movies_list.presentation.model.UiUpcomingMovieModel
 import com.example.moviescity.modules.coming_soon_movies_list.presentation.viewmodel.UpcomingMoviesViewModel
 import com.example.moviescity.modules.movies_fragment.presentation.adapter.ViewsRecyclerAdapter
 import com.example.moviescity.modules.movies_list.presentation.model.EnumMoviesType
 import com.example.moviescity.modules.movies_list.presentation.model.ViewMovieModel
 import com.example.moviescity.modules.movies_list.presentation.viewmodel.MoviesListViewModel
-import com.example.moviescity.modules.movies_list_adapter.presentation.model.AdapterMovieModel
-import com.example.moviescity.modules.movies_list_adapter.presentation.view.MovieClickListener
+import com.example.moviescity.modules.movies_list.presentation.model.AdapterMovieModel
+import com.example.moviescity.modules.movies_list.presentation.view.MovieClickListener
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 

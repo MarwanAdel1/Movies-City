@@ -1,4 +1,4 @@
-package com.example.moviescity.modules.movies_list_adapter.presentation.model
+package com.example.moviescity.modules.movies_list.presentation.model
 
 data class AdapterMovieModel(
     val id: Int,

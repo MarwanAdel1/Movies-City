@@ -1,25 +1,27 @@
-package com.example.moviescity.modules.coming_soon_movies_adapter.presentation.adapter
+package com.example.moviescity.modules.movies_list.presentation.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviescity.R
-import com.example.moviescity.databinding.ItemMovieComingSoonBinding
-import com.example.moviescity.modules.coming_soon_movies_adapter.presentation.model.AdapterComingSoonMovieModel
-import com.example.moviescity.modules.movies_list_adapter.presentation.view.MovieClickListener
+import com.example.moviescity.databinding.ViewMoviesFragmentMoviesListBinding
+import com.example.moviescity.modules.movies_list.presentation.model.AdapterMovieModel
+import com.example.moviescity.modules.movies_list.presentation.view.MovieClickListener
 import com.example.moviescity.utils.Constants
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
-class ComingSoonMoviesListAdapter @Inject constructor(
+class MoviesListAdapter @Inject constructor(
     private val communicator: MovieClickListener,
     private val picasso: Picasso,
     private val constants: Constants
-) : RecyclerView.Adapter<ComingSoonMoviesListAdapter.MoviesListViewHolder>() {
+) : RecyclerView.Adapter<MoviesListAdapter.MoviesListViewHolder>() {
+    private val TAG = "MoviesListAdapter"
 
-    private lateinit var movies: List<AdapterComingSoonMovieModel>
+    private lateinit var movies: List<AdapterMovieModel>
 
-    fun setMovies(movies: List<AdapterComingSoonMovieModel>) {
+    fun setMovies(movies: List<AdapterMovieModel>) {
         this.movies = movies
         notifyDataSetChanged()
     }
@@ -29,7 +31,7 @@ class ComingSoonMoviesListAdapter @Inject constructor(
         viewType: Int
     ): MoviesListViewHolder {
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
-        val view = ItemMovieComingSoonBinding.inflate(layoutInflater, parent, false)
+        val view = ViewMoviesFragmentMoviesListBinding.inflate(layoutInflater, parent, false)
 
         return MoviesListViewHolder(view)
     }
@@ -37,16 +39,21 @@ class ComingSoonMoviesListAdapter @Inject constructor(
     override fun onBindViewHolder(holder: MoviesListViewHolder, position: Int) {
         val movie = movies[position]
         holder.binding.apply {
-            comingSoonMovieImageview.clipToOutline = true
+            itemMovieImage.clipToOutline = true
 
             picasso
                 .load("${constants.API_IMAGE_BASE_URL}${movie.posterPath}")
                 .placeholder(R.drawable.image_default_movie_poster)
                 .error(R.drawable.image_default_movie_poster)
-                .into(comingSoonMovieImageview)
+                .into(itemMovieImage)
 
-            comingSoonMovieTitleTextview.text = movie.title
-            comingSoonMovieReleaseDateTextview.text = movie.releaseDate
+            if (movie.adult) {
+                itemMovieAdultImageview.visibility = View.VISIBLE
+            } else {
+                itemMovieAdultImageview.visibility = View.INVISIBLE
+            }
+
+            itemMovieName.text = movie.title
         }
 
         holder.itemView.setOnClickListener {
@@ -55,13 +62,13 @@ class ComingSoonMoviesListAdapter @Inject constructor(
     }
 
     override fun getItemCount(): Int {
-        var size = 0
-        if (::movies.isInitialized) {
-            size = movies.size
+        return if (::movies.isInitialized) {
+            movies.size
+        } else {
+            0
         }
-        return size
     }
 
-    inner class MoviesListViewHolder(val binding: ItemMovieComingSoonBinding) :
+    inner class MoviesListViewHolder(val binding: ViewMoviesFragmentMoviesListBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

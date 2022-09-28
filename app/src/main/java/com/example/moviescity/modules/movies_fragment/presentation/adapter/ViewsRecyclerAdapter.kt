@@ -9,11 +9,11 @@ import com.example.moviescity.R
 import com.example.moviescity.databinding.ViewMoviesFragmentMoviesListBinding
 import com.example.moviescity.databinding.ViewMoviesTitleFragmentMoviesListBinding
 import com.example.moviescity.databinding.ViewUpcomingMoviesFragmentMoviesListBinding
-import com.example.moviescity.modules.coming_soon_movies_adapter.presentation.adapter.ComingSoonMoviesListAdapter
-import com.example.moviescity.modules.coming_soon_movies_adapter.presentation.model.AdapterComingSoonMovieModel
+import com.example.moviescity.modules.coming_soon_movies_list.presentation.adapter.ComingSoonMoviesListAdapter
+import com.example.moviescity.modules.coming_soon_movies_list.presentation.model.AdapterComingSoonMovieModel
 import com.example.moviescity.modules.movies_fragment.presentation.view.MovieTypeClickListener
-import com.example.moviescity.modules.movies_list_adapter.presentation.model.AdapterMovieModel
-import com.example.moviescity.modules.movies_list_adapter.presentation.view.MovieClickListener
+import com.example.moviescity.modules.movies_list.presentation.model.AdapterMovieModel
+import com.example.moviescity.modules.movies_list.presentation.view.MovieClickListener
 import com.example.moviescity.utils.Constants
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
